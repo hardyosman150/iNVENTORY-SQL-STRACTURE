@@ -1,0 +1,136 @@
+-- Projects table
+CREATE TABLE Projects (
+    ProjectID INT PRIMARY KEY,
+    ProjectName VARCHAR(100),
+    ProjectDescription VARCHAR(255),
+    StartDate DATETIME,
+    EndDate DATETIME,
+    CreatedAt DATETIME
+);
+
+-- Roles table
+CREATE TABLE Roles (
+    RoleID INT PRIMARY KEY,
+    RoleName VARCHAR(100),
+    CreatedAt DATETIME
+);
+
+-- Users table
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY,
+    UserName VARCHAR(100),
+    UserEmail VARCHAR(100),
+    UserPassword VARCHAR(100),
+    CreatedAt DATETIME
+);
+
+-- Permissions table
+CREATE TABLE Permissions (
+    PermissionID INT PRIMARY KEY,
+    PermissionName VARCHAR(100),
+    CreatedAt DATETIME
+);
+
+-- RolePermissions table
+CREATE TABLE RolePermissions (
+    RolePermissionID INT PRIMARY KEY,
+    RoleID INT,
+    PermissionID INT,
+    CreatedAt DATETIME,
+    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID),
+    FOREIGN KEY (PermissionID) REFERENCES Permissions(PermissionID)
+);
+
+-- UserRoles table
+CREATE TABLE UserRoles (
+    UserRoleID INT PRIMARY KEY,
+    UserID INT,
+    RoleID INT,
+    ProjectID INT,
+    CreatedAt DATETIME,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID),
+    FOREIGN KEY (ProjectID) REFERENCES Projects(ProjectID)
+);
+
+-- Products table
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(100),
+    ProductDescription VARCHAR(255),
+    Price DECIMAL(18, 2),
+    ProjectID INT,
+    CreatedAt DATETIME,
+    FOREIGN KEY (ProjectID) REFERENCES Projects(ProjectID)
+);
+
+-- Products_Backup table
+CREATE TABLE Products_Backup (
+    BackupID INT PRIMARY KEY,
+    ProductID INT,
+    ProductName VARCHAR(100),
+    ProductDescription VARCHAR(255),
+    Price DECIMAL(18, 2),
+    ProjectID INT,
+    DeletedAt DATETIME,
+    DeletedBy VARCHAR(100),
+    DeleteReason VARCHAR(255),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
+    FOREIGN KEY (ProjectID) REFERENCES Projects(ProjectID)
+);
+
+-- Customers table
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    CustomerName VARCHAR(100),
+    CustomerEmail VARCHAR(100),
+    CustomerPhone VARCHAR(20),
+    ProjectID INT,
+    CreatedAt DATETIME,
+    FOREIGN KEY (ProjectID) REFERENCES Projects(ProjectID)
+);
+
+-- Customers_Backup table
+CREATE TABLE Customers_Backup (
+    BackupID INT PRIMARY KEY,
+    CustomerID INT,
+    CustomerName VARCHAR(100),
+    CustomerEmail VARCHAR(100),
+    CustomerPhone VARCHAR(20),
+    ProjectID INT,
+    DeletedAt DATETIME,
+    DeletedBy VARCHAR(100),
+    DeleteReason VARCHAR(255),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (ProjectID) REFERENCES Projects(ProjectID)
+);
+
+-- Orders table
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    OrderDate DATETIME,
+    TotalAmount DECIMAL(18, 2),
+    Status VARCHAR(50),
+    ProjectID INT,
+    CreatedAt DATETIME,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (ProjectID) REFERENCES Projects(ProjectID)
+);
+
+-- Orders_Backup table
+CREATE TABLE Orders_Backup (
+    BackupID INT PRIMARY KEY,
+    OrderID INT,
+    CustomerID INT,
+    OrderDate DATETIME,
+    TotalAmount DECIMAL(18, 2),
+    Status VARCHAR(50),
+    ProjectID INT,
+    DeletedAt DATETIME,
+    DeletedBy VARCHAR(100),
+    DeleteReason VARCHAR(255),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (ProjectID) REFERENCES Projects(ProjectID)
+);
