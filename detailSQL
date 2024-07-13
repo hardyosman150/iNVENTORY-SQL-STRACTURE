@@ -1,0 +1,145 @@
+To illustrate the relationships in an advanced comprehensive ERP system schema with detailed role management, we can provide an Entity-Relationship Diagram (ERD). Since I cannot draw the diagram directly, I will describe the relationships between the tables.
+
+### Tables and Relationships
+
+1. **Roles**:
+   - **RoleID** (Primary Key)
+   - **RoleName**
+   - **CreatedAt**
+
+2. **Users**:
+   - **UserID** (Primary Key)
+   - **UserName**
+   - **UserEmail**
+   - **UserPassword**
+   - **CreatedAt**
+
+3. **Permissions**:
+   - **PermissionID** (Primary Key)
+   - **PermissionName**
+   - **CreatedAt**
+
+4. **RolePermissions**:
+   - **RolePermissionID** (Primary Key)
+   - **RoleID** (Foreign Key to Roles.RoleID)
+   - **PermissionID** (Foreign Key to Permissions.PermissionID)
+   - **CreatedAt**
+
+5. **UserRoles**:
+   - **UserRoleID** (Primary Key)
+   - **UserID** (Foreign Key to Users.UserID)
+   - **RoleID** (Foreign Key to Roles.RoleID)
+   - **CreatedAt**
+
+6. **Products**:
+   - **ProductID** (Primary Key)
+   - **ProductName**
+   - **ProductDescription**
+   - **Price**
+   - **CreatedAt**
+
+7. **Products_Backup**:
+   - **BackupID** (Primary Key)
+   - **ProductID**
+   - **ProductName**
+   - **ProductDescription**
+   - **Price**
+   - **DeletedAt**
+   - **DeletedBy**
+   - **DeleteReason**
+
+8. **Customers**:
+   - **CustomerID** (Primary Key)
+   - **CustomerName**
+   - **CustomerEmail**
+   - **CustomerPhone**
+   - **CreatedAt**
+
+9. **Customers_Backup**:
+   - **BackupID** (Primary Key)
+   - **CustomerID**
+   - **CustomerName**
+   - **CustomerEmail**
+   - **CustomerPhone**
+   - **DeletedAt**
+   - **DeletedBy**
+   - **DeleteReason**
+
+10. **Orders**:
+    - **OrderID** (Primary Key)
+    - **CustomerID** (Foreign Key to Customers.CustomerID)
+    - **OrderDate**
+    - **TotalAmount**
+    - **Status**
+    - **CreatedAt**
+
+11. **Orders_Backup**:
+    - **BackupID** (Primary Key)
+    - **OrderID**
+    - **CustomerID**
+    - **OrderDate**
+    - **TotalAmount**
+    - **Status**
+    - **DeletedAt**
+    - **DeletedBy**
+    - **DeleteReason**
+
+### Relationships
+
+- **Roles** and **RolePermissions**: One-to-Many (one role can have multiple permissions).
+  - **Roles.RoleID** → **RolePermissions.RoleID**
+
+- **Permissions** and **RolePermissions**: One-to-Many (one permission can be assigned to multiple roles).
+  - **Permissions.PermissionID** → **RolePermissions.PermissionID**
+
+- **Users** and **UserRoles**: One-to-Many (one user can have multiple roles).
+  - **Users.UserID** → **UserRoles.UserID**
+
+- **Roles** and **UserRoles**: One-to-Many (one role can be assigned to multiple users).
+  - **Roles.RoleID** → **UserRoles.RoleID**
+
+- **Customers** and **Orders**: One-to-Many (one customer can have multiple orders).
+  - **Customers.CustomerID** → **Orders.CustomerID**
+
+- **Products** and **Products_Backup**: One-to-Many (one product can have multiple backup entries).
+  - **Products.ProductID** → **Products_Backup.ProductID**
+
+- **Customers** and **Customers_Backup**: One-to-Many (one customer can have multiple backup entries).
+  - **Customers.CustomerID** → **Customers_Backup.CustomerID**
+
+- **Orders** and **Orders_Backup**: One-to-Many (one order can have multiple backup entries).
+  - **Orders.OrderID** → **Orders_Backup.OrderID**
+
+### ERD (Description)
+
+Here is a textual representation of the ERD:
+
+1. **Roles**
+   - **RoleID** → **RolePermissions.RoleID**
+   - **RoleID** → **UserRoles.RoleID**
+
+2. **Users**
+   - **UserID** → **UserRoles.UserID**
+
+3. **Permissions**
+   - **PermissionID** → **RolePermissions.PermissionID**
+
+4. **Products**
+   - **ProductID** → **Products_Backup.ProductID**
+
+5. **Customers**
+   - **CustomerID** → **Orders.CustomerID**
+   - **CustomerID** → **Customers_Backup.CustomerID**
+
+6. **Orders**
+   - **OrderID** → **Orders_Backup.OrderID**
+
+### Diagram Key Points
+
+- Each **role** can have multiple **permissions** and each **permission** can be associated with multiple **roles**.
+- Each **user** can have multiple **roles**, and each **role** can be assigned to multiple **users**.
+- Deleting a row in **Products**, **Customers**, or **Orders** creates a backup entry in the corresponding backup table with metadata.
+- **Customers** can place multiple **orders**.
+- Each original table has a corresponding backup table to store deleted rows.
+
+This design ensures that user roles and permissions are managed effectively while also providing a robust backup mechanism for critical data in the ERP system.
